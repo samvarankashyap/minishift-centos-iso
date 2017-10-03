@@ -21,6 +21,7 @@ repo --name=base --baseurl=http://mirror.centos.org/centos/7/os/x86_64/
 repo --name=updates --baseurl=http://mirror.centos.org/centos/7/updates/x86_64/
 repo --name=extras --baseurl=http://mirror.centos.org/centos/7/extras/x86_64/
 repo --name=atomic --baseurl=http://mirror.centos.org/centos/7/atomic/x86_64/adb/
+repo --name=epel --baseurl=http://dl.fedoraproject.org/pub/epel/6/x86_64/
 
 shutdown
 
@@ -45,6 +46,8 @@ hyperv-daemons
 cifs-utils
 fuse-sshfs
 nfs-utils
+epel-release
+libvirt
 
 #Packages to be removed
 -aic94xx-firmware
@@ -76,6 +79,10 @@ nfs-utils
 
 # Setting a global Locale for the server
 echo "LANG=\"C\"" > /etc/locale.conf
+
+# install kvm on centos 
+yum -y install kvm
+echo "ttyS0" >> /etc/securetty
 
 # Add docker user with 'tcuser' password
 /usr/sbin/useradd -p '$1$AhiE7wa5$d8puTTTSvN7Hq3JgUvfLV/' docker
@@ -168,6 +175,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable docker
+systemctl enable libvirtd
 
 # Show a warning banner when using yum to install software
 mv /usr/bin/yum /usr/bin/yum-unsupported
